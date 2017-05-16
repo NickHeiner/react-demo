@@ -1,20 +1,56 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { PureComponent } from 'react';
 import './App.css';
 
-class App extends Component {
+class ListItem extends PureComponent {
   render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+    console.log('ListItemRender', this.props);
+    return <li>{this.props.name}</li>
+  }
+}
+
+class List extends PureComponent {
+  render() {
+    const {items} = this.props;
+    return <ul>
+        {
+          items.map(item => <ListItem key={item.id} name={item.name} />)
+        }
+      </ul>;
+  }
+}
+
+class AddButton extends PureComponent {
+  render() {
+    return <button onClick={this.props.onClick}>Add item</button>
+  }
+}
+
+class App extends PureComponent {
+  constructor() {
+    super();
+    this.state = {
+      items: [
+        {id: 0, name: 'Apple'},
+        {id: 1, name: 'Orange'},
+        {id: 2, name: 'Horse'},
+      ]
+    }
+  }
+
+  handleAddItem = () => {
+    this.setState({
+      items: this.state.items.concat({
+        id: 3,
+        name: 'Banana'
+      })
+    });
+  }
+
+  render() {
+    return <div>
+      <List items={this.state.items} />
+      <AddButton onClick={this.handleAddItem} />
+    </div>;
   }
 }
 
