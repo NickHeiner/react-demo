@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import _ from 'lodash';
 import './App.css';
 
 class ListItem extends PureComponent {
@@ -19,37 +20,45 @@ class List extends PureComponent {
   }
 }
 
-class AddButton extends PureComponent {
+class SearchBox extends PureComponent {
   render() {
-    return <button onClick={this.props.onClick}>Add item</button>
+    return <input type="text" value={this.props.value} onChange={this.props.onChange} />;
   }
 }
 
 class App extends PureComponent {
   constructor() {
     super();
-    this.state = {
+    this.state = this.updateFilteredItemIds({
       items: [
         {id: 0, name: 'Apple'},
         {id: 1, name: 'Orange'},
         {id: 2, name: 'Horse'},
-      ]
-    }
+      ],
+      filteredItemIds: null,
+      searchValue: ''
+    });
   }
 
-  handleAddItem = () => {
-    this.setState({
-      items: this.state.items.concat({
-        id: 3,
-        name: 'Banana'
-      })
-    });
+  updateFilteredItemIds = (prevState) => ({
+    ...prevState, 
+    filteredItemIds: _(prevState.items)
+      .filter(
+        ({name}) => name.includes(prevState.searchValue)
+      ) 
+      .map('id')
+      .value()
+  })
+
+  handleSearchChange = (event) => {
+    const nextState = {...this.state, searchValue: event.target.value};
+    this.setState(this.updateFilteredItemIds(nextState));
   }
 
   render() {
     return <div>
-      <List items={this.state.items} />
-      <AddButton onClick={this.handleAddItem} />
+      <List items={_.map(this.state.filteredItemIds, id => this.state.items[id])} />
+      <SearchBox value={this.state.searchValue} onChange={this.handleSearchChange} />
     </div>;
   }
 }
