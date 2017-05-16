@@ -11,6 +11,7 @@ class ListItem extends PureComponent {
 
 class List extends PureComponent {
   render() {
+    console.log('List render');
     const {items} = this.props;
     return <ul>
         {
