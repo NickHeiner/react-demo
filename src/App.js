@@ -2,64 +2,44 @@ import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import './App.css';
 
-class ListItem extends PureComponent {
+class PureChildElem extends React.PureComponent {
   render() {
-    console.log('ListItemRender', this.props);
-    return <li>{this.props.name}</li>
+    console.log('Pure child elem render');
+    return <p>Pure Child Elem</p>;
   }
 }
 
-class List extends PureComponent {
+class ChildElem extends React.Component {
   render() {
-    console.log('List render');
-    const {items} = this.props;
-    return <ul>
-        {
-          items.map(item => <ListItem key={item.id} name={item.name} />)
-        }
-      </ul>;
+    console.log('Child elem render');
+    return <p>Child Elem</p>;
   }
 }
 
-class SearchBox extends PureComponent {
+class RootElem extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      counter: 0
+    };
+  }
+
+  handleClick = () => this.setState({counter: this.state.counter + 1});
+
   render() {
-    return <input type="text" value={this.props.value} onChange={this.props.onChange} />;
+    console.log('RootElem render');
+    return <div>
+      <button onClick={this.handleClick}>Change root elem state</button>
+      <ChildElem />
+      <PureChildElem />
+    </div>;
   }
 }
 
 class App extends PureComponent {
-  constructor() {
-    super();
-    this.state = this.updateFilteredItemIds({
-      items: [
-        {id: 0, name: 'Apple'},
-        {id: 1, name: 'Orange'},
-        {id: 2, name: 'Horse'},
-      ],
-      filteredItemIds: null,
-      searchValue: ''
-    });
-  }
-
-  updateFilteredItemIds = (prevState) => ({
-    ...prevState, 
-    filteredItemIds: _(prevState.items)
-      .filter(
-        ({name}) => name.includes(prevState.searchValue)
-      ) 
-      .map('id')
-      .value()
-  })
-
-  handleSearchChange = (event) => {
-    const nextState = {...this.state, searchValue: event.target.value};
-    this.setState(this.updateFilteredItemIds(nextState));
-  }
-
   render() {
     return <div>
-      <List items={_.map(this.state.filteredItemIds, id => this.state.items[id])} />
-      <SearchBox value={this.state.searchValue} onChange={this.handleSearchChange} />
+      <RootElem />
     </div>;
   }
 }
