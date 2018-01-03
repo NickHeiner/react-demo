@@ -7,38 +7,21 @@ initPerfMeasurement();
 
 class ListItem extends PureComponent {
   render() {
-    console.log('ListItemRender', this.props);
     return <li>{this.props.name}</li>
   }
 }
 
-class List extends PureComponent {
-  render() {
-    console.log('List render');
-    const {items} = this.props;
-    return <ul>
-        {
-          items.map(item => <ListItem key={item.id} name={item.name} />)
-        }
-      </ul>;
-  }
-}
-
-class SearchBox extends PureComponent {
-  render() {
-    return <input type="text" value={this.props.value} onChange={this.props.onChange} />;
-  }
-}
+const getManyItems = () => 
+  _(100)
+    .range()
+    .map(index => ({id: index, name: `item-${index}`}))  
+    .value();
 
 class App extends PureComponent {
   constructor() {
     super();
     this.state = this.updateFilteredItemIds({
-      items: [
-        {id: 0, name: 'Apple'},
-        {id: 1, name: 'Orange'},
-        {id: 2, name: 'Horse'},
-      ],
+      items: getManyItems(),
       filteredItemIds: null,
       searchValue: ''
     });
@@ -59,10 +42,25 @@ class App extends PureComponent {
     this.setState(this.updateFilteredItemIds(nextState));
   }
 
+  addItem = () => {
+    this.setState({
+      items: [
+        {
+          id: this.state.items.length,
+          name: `item-${this.state.items.length}`
+        },
+        ...this.state.items
+      ]
+    })
+  }
+
   render() {
+
+    const items = this.state.items.map((item, index) => <ListItem key={item.id} name={item.name} />)
+
     return <div>
-      <List items={_.map(this.state.filteredItemIds, id => this.state.items[id])} />
-      <SearchBox value={this.state.searchValue} onChange={this.handleSearchChange} />
+      <button onClick={this.addItem}>Add item</button>
+      <ul>{items}</ul>
     </div>;
   }
 }
