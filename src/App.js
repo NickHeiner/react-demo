@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import './App.css';
+import initPerfMeasurement from './Perf';
+
+initPerfMeasurement();
 
 class ListItem extends PureComponent {
   render() {
