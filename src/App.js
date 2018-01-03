@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import './App.css';
-import initPerfMeasurement from './Perf';
+// import initPerfMeasurement from './Perf';
 
-initPerfMeasurement();
+// initPerfMeasurement();
 
 class ListItem extends PureComponent {
   render() {
+    console.log('render ListItem')
     return <li>{this.props.name}</li>
   }
 }
