@@ -1,43 +1,55 @@
-import React, { PureComponent } from 'react';
-import _ from 'lodash';
 import './App.css';
-import { BrowserRouter, Route, Link } from 'react-router-dom';
 
-const RootPage = () => <p>root path</p>
-const OtherPage = () => <p>other path</p>
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
 
-class Routes extends PureComponent {
-  render = () => <div>
-    <Route path="/" exact component={RootPage} />
-    <Route path="/other" exact component={OtherPage} />
+const Home = () => (
+  <div>
+    <h2>Home</h2>
   </div>
+)
+
+const About = () => (
+  <div>
+    <h2>About</h2>
+  </div>
+)
+
+const Routes = () => (
+  <div>
+    <Route exact path="/" component={Home}/>
+    <Route path="/about" component={About}/>
+  </div>
+)
+
+class RoutesPureWrapper extends React.PureComponent {
+  render = () => <Routes />
 }
 
-const PassthroughComponent = ({children}) => children;
+const RoutesFunctionalWrapper = () => <Routes />
 
-class App extends PureComponent {
-  render() {
-    return <BrowserRouter>
-      <div>
-        <ul>
-          <li>
-            <Link to="/">Root</Link>
-          </li>
-          <li>
-            <Link to="/other">Other</Link>
-          </li>
-        </ul>
+const BasicExample = () => (
+  <Router>
+    <div>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li>
+      </ul>
 
-        <h1>With Passthrough</h1>
-        <PassthroughComponent>
-          <Routes />
-        </PassthroughComponent>
+      <hr/>
 
-        <h1>Without Passthrough</h1>
-        <Routes />
-      </div>
-    </BrowserRouter>;
-  }
-}
+      <h1>Routes in functional wrapper</h1>
+      <RoutesFunctionalWrapper />
 
-export default App;
+      <hr/>
+
+      <h1>Routes in pure wrapper</h1>
+      <RoutesPureWrapper />
+    </div>
+  </Router>
+)
+export default BasicExample
