@@ -4,6 +4,7 @@ import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
+  withRouter,
   Link
 } from 'react-router-dom'
 
@@ -32,6 +33,8 @@ class RoutesPureWrapper extends React.PureComponent {
 
 const RoutesFunctionalWrapper = () => <Routes />
 
+const RoutesPureWrapperWithRouter = withRouter(RoutesPureWrapper)
+
 const BasicExample = () => (
   <Router>
     <div>
@@ -49,6 +52,11 @@ const BasicExample = () => (
 
       <h1>Routes in pure wrapper</h1>
       <RoutesPureWrapper />
+
+      <hr/>
+
+      <h1>Routes in pure wrapper wrapped in withRouter</h1>
+      <RoutesPureWrapperWithRouter />
     </div>
   </Router>
 )
