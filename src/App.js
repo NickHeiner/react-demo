@@ -1,66 +1,42 @@
 import React, { PureComponent } from 'react';
 import _ from 'lodash';
 import './App.css';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 
-class ListItem extends PureComponent {
-  render() {
-    console.log('ListItemRender', this.props);
-    return <li>{this.props.name}</li>
-  }
+const RootPage = () => <p>root path</p>
+const OtherPage = () => <p>other path</p>
+
+class Routes extends PureComponent {
+  render = () => <div>
+    <Route path="/" exact component={RootPage} />
+    <Route path="/other" exact component={OtherPage} />
+  </div>
 }
 
-class List extends PureComponent {
-  render() {
-    console.log('List render');
-    const {items} = this.props;
-    return <ul>
-        {
-          items.map(item => <ListItem key={item.id} name={item.name} />)
-        }
-      </ul>;
-  }
-}
-
-class SearchBox extends PureComponent {
-  render() {
-    return <input type="text" value={this.props.value} onChange={this.props.onChange} />;
-  }
-}
+const PassthroughComponent = ({children}) => children;
 
 class App extends PureComponent {
-  constructor() {
-    super();
-    this.state = this.updateFilteredItemIds({
-      items: [
-        {id: 0, name: 'Apple'},
-        {id: 1, name: 'Orange'},
-        {id: 2, name: 'Horse'},
-      ],
-      filteredItemIds: null,
-      searchValue: ''
-    });
-  }
-
-  updateFilteredItemIds = (prevState) => ({
-    ...prevState, 
-    filteredItemIds: _(prevState.items)
-      .filter(
-        ({name}) => name.includes(prevState.searchValue)
-      ) 
-      .map('id')
-      .value()
-  })
-
-  handleSearchChange = (event) => {
-    const nextState = {...this.state, searchValue: event.target.value};
-    this.setState(this.updateFilteredItemIds(nextState));
-  }
-
   render() {
-    return <div>
-      <List items={_.map(this.state.filteredItemIds, id => this.state.items[id])} />
-      <SearchBox value={this.state.searchValue} onChange={this.handleSearchChange} />
-    </div>;
+    return <BrowserRouter>
+      <div>
+        <ul>
+          <li>
+            <Link to="/">Root</Link>
+          </li>
+          <li>
+            <Link to="/other">Other</Link>
+          </li>
+        </ul>
+
+        <h1>With Passthrough</h1>
+        <PassthroughComponent>
+          <Routes />
+        </PassthroughComponent>
+
+        <h1>Without Passthrough</h1>
+        <Routes />
+      </div>
+    </BrowserRouter>;
   }
 }
 
